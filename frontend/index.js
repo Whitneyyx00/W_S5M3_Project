@@ -4,8 +4,15 @@ function moduleProject3() {
 
   function buildNav(links) {
     //  ✨ do your magic here
-    return document.createElement('nav')
-  }
+    return document.createElement('nav');
+    links.forEach(link => {
+      const a = document.createElement('a');
+      a.href = link.href;
+      a.textContent = link.textContent;
+      a.title = link.title;
+      navigator.appendChild(a);
+    });
+    return nav;
 
   // ❗ DOM creation using your `buildNav` component (do not change):
   document.querySelector('header').appendChild(buildNav([
@@ -14,12 +21,38 @@ function moduleProject3() {
     { href: 'https://www.example.com/services', textContent: 'Services', title: 'View our available services' },
     { href: 'https://www.example.com/blog', textContent: 'Blog', title: 'Read our latest blog posts' },
     { href: 'https://www.example.com/contact', textContent: 'Contact', title: 'Get in touch with us' },
-  ]))
+  ]));
 
   // 👉 TASK 2A - Write a `buildLearnerCard` component that returns a card
 
   function buildLearnerCard(learner, languages) {
     //  ✨ do your magic here
+    const card = document.createElement('div');
+    card.classList.add('learner-card');
+
+    const name = document.createElement('p');
+    name.textContent = learner.fullName;
+    card.appendChild(name);
+
+    const learnerId = document.createElement('p');
+    learnerId.textContent = `Learner ID: ${learner.id}`;
+    card.appendChild(learnerId);
+
+    const dob = document.createElement('p');
+    dob.textContent = `Date of Birth: ${learner.dateOfBirth}`;
+    card.appendChild(dob);
+
+    const favLanguage = document.createElement('p');
+    const language = languages.find(lang => lang.id === learner.favLanguage);
+    favLanguage.textContent = `Favorite Language: ${language ? language.name : 'Unknown'}`;
+    card.appendChild(favLanguage);
+
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.learner-card').forEach(card => card.classList.remove('active'));
+      card.classList.add('active');
+    });
+
+    return card;
   }
 
   {
@@ -40,12 +73,50 @@ function moduleProject3() {
       { id: 17, fullName: 'Daniel Castillo', dateOfBirth: '1995-11-05', favLanguage: 12 }
     ]
     //  ✨ do your magic here
+    const section = document.querySelector('section');
+    learners.forEach(learner => {
+      const card = buildLearnerCard(learner, languages);
+      section.appendChild(card);
+    });
   }
 
   // 👉 TASK 3 - Write a `buildFooter` component that returns a footer
 
   function buildFooter(footerData) {
     //  ✨ do your magic here
+    const footer = document.createElement('footer');
+
+    const companyInfo = document.createElement('div');
+    companyInfo.classList.add('company-info');
+
+    const companyName = document.createElement('p');
+    companyName.classList.add('company-name');
+    companyName.textContent = footerData.companyName;
+    companyInfo.appendChild(companyName);
+
+    const address = document.createElement('p');
+    contactEmail.classList.add('contact-email');
+    contactEmail.innerHTML = `Email: <a href="mailto:${footerData.contactEmail}">${footerData.contactEmail}</a>`;
+    companyInfo.appendChild(contactEmail);
+
+    footer.appendChild(companyInfo);
+
+    const socialMedia = document.createElement('div');
+    socialMedia.classList.add('social-media');
+
+    for (const [platform, url] of Object.entries(footerData.socialMedia)) {
+      const a = document.createElement('a');
+      a.href = url;
+      a.textContent = platform.charAt(0).toUpperCase() + platform.slice(1);
+      socialMedia.appendChild(a);
+    }
+
+    footer.appendChild(socialMedia);
+
+    const copyright = document.createElement('div');
+    copyright.textContent = `© ${footerData.companyName} 2023`;
+    footer.appendChild(copyright);
+
     return document.createElement('footer')
   }
 
@@ -64,6 +135,11 @@ function moduleProject3() {
   // 👉 TASK 4 - Clicking on the section should deactivate the active card
 
   //  ✨ do your magic here
+  document.querySelector('section').addEventListener('click', event => {
+    if (!event.target.closest('.learner-card')) {
+      document.querySelectorAll('.learner-card').forEach(card => card.classList.remove('active'));
+    }
+  });
 }
 
 // ❗ DO NOT CHANGE THIS CODE
